@@ -1,6 +1,7 @@
 package com.smsApp.smsplatform.service;
 
 
+import com.smsApp.smsplatform.model.CustomerMsgDetails;
 import com.smsApp.smsplatform.model.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -44,4 +45,22 @@ public class KafkaMsgPublisher {
         }
     }
 
+    public void sendMessageToTopic3(CustomerMsgDetails msgdetails) {
+        try{
+            CompletableFuture<SendResult<String, Object>> future = template.send("telcotopictest1", msgdetails);
+            future.whenComplete((result, ex) -> {
+                if (ex == null) {
+                    System.out.println("sent message =[" + msgdetails +
+                            "] with offset =[" + result.getRecordMetadata().offset() + "]");
+                } else {
+                    System.out.println("unable to send message =[" +
+                            msgdetails.toString() + "] due to :" + ex.getMessage());
+                }
+            });
+        }catch (Exception e){
+            System.out.println("error msg : "+e.getMessage());
+        }
+    }
+
 }
+

@@ -1,19 +1,23 @@
 package com.smsApp.smsplatform.ServiceImpl;
 import com.smsApp.smsplatform.model.SendMsg;
-import com.smsApp.smsplatform.repository.sendMsgRepository;
-import com.smsApp.smsplatform.service.SendmsgService;
+import com.smsApp.smsplatform.repository.DataBaseRepository;
+import com.smsApp.smsplatform.service.DatabaseService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.sql.Timestamp;
 
 @Service
-public class SendmsgServiceImpl implements SendmsgService {
+@Slf4j
+public class DataBaseServiceImpl implements DatabaseService {
     @Autowired
-    sendMsgRepository sendMsgRepository;
+    DataBaseRepository sendMsgRepository;
     @Override
-    public String sendMessage(String username, String password, Long mobile, String message) {
+    public SendMsg sendMessage( int account_id,Long mobile, String message) {
         SendMsg msg = new SendMsg();
+        msg.setAccount_id(account_id);
         msg.setMobile(mobile);
         msg.setMessage(message);
         Date date = new Date();
@@ -23,6 +27,7 @@ public class SendmsgServiceImpl implements SendmsgService {
         msg.setReceived_ts(ts);msg.setStatus("New");
         SendMsg res = sendMsgRepository.save(msg);
         System.out.println("msg saved "+res);
-        return "saved";
+        return res;
     }
+
 }
